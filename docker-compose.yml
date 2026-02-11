@@ -1,22 +1,25 @@
 version: '3.8'
 
 services:
-  webmail:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: afterlogic-webmail:latest
-    container_name: afterlogic_webmail
+  sogo:
+    image: inverse/sogo:latest
+    container_name: sogo_webmail
     restart: unless-stopped
     ports:
       - "9000:80"
-    volumes:
-      - ./data:/var/www/html/data
     environment:
       - TZ=Asia/Dhaka
+    volumes:
+      - ./sogo.conf:/etc/sogo/sogo.conf:ro
+      - sogo-data:/var/lib/sogo
+      - sogo-logs:/var/log/sogo
     networks:
       - mailnet
 
 networks:
   mailnet:
     driver: bridge
+
+volumes:
+  sogo-data:
+  sogo-logs:
