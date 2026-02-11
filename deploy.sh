@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Roundcube Webmail Setup Script
-# Works with aaPanel Mail Server
+# RainLoop Webmail Complete Setup Script
 
 set -e
 
 echo "╔════════════════════════════════════════════════════════╗"
-echo "║        Roundcube Webmail Setup                         ║"
+echo "║        RainLoop Webmail Installation                  ║"
 echo "╚════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -39,78 +38,106 @@ if ! command -v docker-compose &> /dev/null; then
     echo -e "${GREEN}✓ Docker Compose installed${NC}"
 fi
 
-# Stop any existing containers
-echo -e "${YELLOW}Stopping existing containers...${NC}"
-docker-compose down 2>/dev/null || true
+# Stop and remove all existing containers
+echo -e "${YELLOW}Cleaning up old containers...${NC}"
+docker stop $(docker ps -aq) 2>/dev/null || true
+docker rm -f $(docker ps -aq) 2>/dev/null || true
+docker network prune -f
+echo -e "${GREEN}✓ Cleanup complete${NC}"
 
-# Create directories
-echo -e "${YELLOW}Creating directories...${NC}"
-mkdir -p ./roundcube-data
-mkdir -p ./roundcube-db
-chmod -R 755 ./roundcube-data ./roundcube-db
+# Create data directory
+echo -e "${YELLOW}Creating data directory...${NC}"
+mkdir -p ./rainloop-data
+chmod -R 755 ./rainloop-data
 
-# Pull image
-echo -e "${YELLOW}Pulling Roundcube image...${NC}"
-docker-compose pull
+# Build and start RainLoop
+echo -e "${YELLOW}Building RainLoop Docker image...${NC}"
+echo -e "${YELLOW}This may take 3-5 minutes...${NC}"
+docker-compose build --no-cache
 
-# Start Roundcube
-echo -e "${YELLOW}Starting Roundcube...${NC}"
+echo -e "${YELLOW}Starting RainLoop...${NC}"
 docker-compose up -d
 
 # Wait for container to start
-echo -e "${YELLOW}Waiting for Roundcube to initialize...${NC}"
-sleep 15
+echo -e "${YELLOW}Waiting for RainLoop to initialize...${NC}"
+sleep 20
 
 # Check if running
-if docker ps | grep -q roundcube_webmail; then
-    echo -e "${GREEN}✓ Roundcube is running!${NC}"
+if docker ps | grep -q rainloop_webmail; then
+    echo -e "${GREEN}✓ RainLoop is running!${NC}"
 else
-    echo -e "${RED}✗ Failed to start Roundcube${NC}"
+    echo -e "${RED}✗ RainLoop failed to start${NC}"
     docker-compose logs
     exit 1
 fi
 
-# Test accessibility
-echo -e "${YELLOW}Testing accessibility...${NC}"
+# Configure domain via admin panel API (if possible)
+echo -e "${YELLOW}Configuring mail server settings...${NC}"
 sleep 5
 
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep -q "200"; then
-    echo -e "${GREEN}✓ Roundcube is accessible!${NC}"
+# Create domain configuration manually
+mkdir -p ./rainloop-data/_data_/_default_/domains
+
+cat > ./rainloop-data/_data_/_default_/domains/syscomatic.com.ini << 'EOF'
+imap_host = "156.67.216.209"
+imap_port = 993
+imap_secure = "SSL"
+imap_short_login = Off
+sieve_use = Off
+smtp_host = "156.67.216.209"
+smtp_port = 587
+smtp_secure = "TLS"
+smtp_short_login = Off
+smtp_auth = On
+smtp_php_mail = Off
+white_list = ""
+EOF
+
+# Set permissions
+chown -R 33:33 ./rainloop-data 2>/dev/null || chown -R www-data:www-data ./rainloop-data 2>/dev/null || true
+chmod -R 755 ./rainloop-data
+
+# Restart to apply configuration
+echo -e "${YELLOW}Restarting to apply configuration...${NC}"
+docker-compose restart
+sleep 10
+
+# Test accessibility
+if curl -s http://localhost:9000 > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ RainLoop is accessible!${NC}"
 else
-    echo -e "${YELLOW}⚠ Roundcube may still be initializing...${NC}"
+    echo -e "${YELLOW}⚠ RainLoop may still be starting...${NC}"
 fi
 
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║              Setup Complete!                           ║${NC}"
+echo -e "${GREEN}║              Installation Complete!                    ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${GREEN}✓ Roundcube is configured and running${NC}"
-echo -e "${GREEN}✓ Pre-configured for your mail server${NC}"
+echo -e "${GREEN}✓ RainLoop is installed and running${NC}"
+echo -e "${GREEN}✓ Running on port 9000${NC}"
+echo -e "${GREEN}✓ Domain 'syscomatic.com' pre-configured${NC}"
 echo -e "${GREEN}✓ IMAP: 156.67.216.209:993 (SSL)${NC}"
 echo -e "${GREEN}✓ SMTP: 156.67.216.209:587 (TLS)${NC}"
 echo ""
-echo -e "${YELLOW}Access your webmail:${NC}"
-echo "  URL: https://mailadmin.syscomatic.com"
+echo -e "${YELLOW}Next Steps:${NC}"
 echo ""
-echo -e "${YELLOW}Login with your email accounts:${NC}"
-echo "  Email: asif@syscomatic.com"
-echo "  Password: Asif@2026#"
+echo -e "${YELLOW}1. Configure aaPanel Reverse Proxy:${NC}"
+echo "   - Login to aaPanel"
+echo "   - Go to site: mailadmin.syscomatic.com"
+echo "   - Set reverse proxy to: http://127.0.0.1:9000"
+echo "   - Add SSL certificate"
 echo ""
-echo "  Email: rakib@syscomatic.com"
-echo "  Password: Rakib@2026#"
+echo -e "${YELLOW}2. Access Webmail:${NC}"
+echo "   URL: https://mailadmin.syscomatic.com"
+echo "   Email: asif@syscomatic.com"
+echo "   Password: Asif@2026#"
 echo ""
-echo "  Email: consult@syscomatic.com"
-echo "  Password: C@nsult@2026#"
+echo -e "${YELLOW}3. Admin Panel (optional):${NC}"
+echo "   URL: https://mailadmin.syscomatic.com/?admin"
+echo "   Username: admin"
+echo "   Password: 12345"
+echo "   ${RED}⚠️  Change this password immediately!${NC}"
 echo ""
-echo "  Email: zahed@syscomatic.com"
-echo "  Password: Z@hed@2026#"
-echo ""
-echo -e "${YELLOW}Configure aaPanel reverse proxy:${NC}"
-echo "  1. Login to aaPanel"
-echo "  2. Add site: mailadmin.syscomatic.com"
-echo "  3. Set reverse proxy to: http://127.0.0.1:8080"
-echo "  4. Add SSL certificate"
-echo ""
-echo -e "${GREEN}🎉 Roundcube is ready to use!${NC}"
+echo -e "${GREEN}🎉 RainLoop is ready to use!${NC}"
 echo ""

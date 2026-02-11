@@ -1,21 +1,22 @@
-# Roundcube Webmail System
+# RainLoop Webmail System
 
-> **Reliable, proven webmail client for your aaPanel mail server**  
-> Works immediately with your existing mail accounts
+> **Modern, fast, and simple webmail client**  
+> Custom-built for your aaPanel mail server
 
 ---
 
-## 🎯 What is This?
+## 🎯 What is RainLoop?
 
-**Roundcube** - The most popular open-source webmail client. Pre-configured for your aaPanel mail server at `mailadmin.syscomatic.com`.
+**RainLoop** - A modern, fast, and simple webmail client. Pre-configured for your mail server at `mailadmin.syscomatic.com`.
 
-### ✨ Why Roundcube?
+### ✨ Why RainLoop?
 
-- ✅ **Works immediately** - No complex configuration
-- ✅ **Proven & reliable** - Used by millions
-- ✅ **Pre-configured** - Ready for your mail server
-- ✅ **No admin panel issues** - Just login and use
-- ✅ **Full-featured** - Everything you need
+- ✅ **Simple & Fast** - Clean, modern interface
+- ✅ **Easy Setup** - Pre-configured for your server
+- ✅ **Customizable** - Built from Dockerfile
+- ✅ **Lightweight** - Uses minimal resources
+- ✅ **No Complex Config** - Works immediately
+- ✅ **Mobile Friendly** - Responsive design
 
 ---
 
@@ -33,7 +34,16 @@ cd /opt/mailsystem
 sudo ./deploy.sh
 ```
 
-**That's it!** Takes 3 minutes.
+**Takes 5 minutes** (includes Docker build time)
+
+---
+
+## 📦 What's Included
+
+- ✅ **Custom Dockerfile** - Optimized RainLoop build
+- ✅ **Pre-configured** - Domain settings included
+- ✅ **Docker Compose** - Easy deployment
+- ✅ **Auto-setup script** - One command installation
 
 ---
 
@@ -42,6 +52,8 @@ sudo ./deploy.sh
 Already configured for your mail server:
 
 ```yaml
+Domain: syscomatic.com
+
 IMAP:
   Server: 156.67.216.209
   Port: 993
@@ -51,9 +63,10 @@ SMTP:
   Server: 156.67.216.209
   Port: 587
   Security: TLS
+  Authentication: Enabled
 ```
 
-**No configuration needed!**
+**No manual configuration needed!**
 
 ---
 
@@ -65,7 +78,7 @@ SMTP:
 2. **Add Website:**
    - Domain: `mailadmin.syscomatic.com`
 3. **Set Reverse Proxy:**
-   - Target: `http://127.0.0.1:8080`
+   - Target: `http://127.0.0.1:9000`
 4. **Add SSL Certificate:**
    - Use Let's Encrypt
 
@@ -96,17 +109,53 @@ zahed@syscomatic.com - Z@hed@2026#
 
 ---
 
-## 🆚 Roundcube vs Snappymail
+## 🔧 Admin Panel (Optional)
 
-| Feature | Roundcube | Snappymail |
-|---------|-----------|------------|
-| **Setup** | ✅ Works immediately | ❌ Needs admin config |
-| **Reliability** | ✅ Very stable | ⚠️ Can be tricky |
-| **Configuration** | ✅ Pre-configured | ❌ Manual setup |
-| **Compatibility** | ✅ Works with all mail servers | ⚠️ Sometimes issues |
-| **Maturity** | ✅ 15+ years | ⚠️ Newer |
+Access admin panel at:
+```
+URL: https://mailadmin.syscomatic.com/?admin
+Username: admin
+Password: 12345
+```
 
-**Roundcube just works!**
+⚠️ **Change the password immediately!**
+
+In admin panel you can:
+- Add more domains
+- Customize appearance
+- Configure plugins
+- Manage settings
+
+---
+
+## 🆚 RainLoop vs Others
+
+| Feature | RainLoop | Roundcube | Snappymail |
+|---------|----------|-----------|------------|
+| **Setup** | ✅ Easy | ⚠️ Medium | ❌ Complex |
+| **Speed** | ✅ Very fast | ⚠️ Medium | ✅ Fast |
+| **Interface** | ✅ Modern | ⚠️ Traditional | ✅ Modern |
+| **Configuration** | ✅ Pre-configured | ✅ Pre-configured | ❌ Manual |
+| **Customization** | ✅ Dockerfile | ❌ Image only | ❌ Image only |
+| **Admin Panel** | ✅ Simple | ❌ None | ⚠️ Complex |
+
+**RainLoop is the best balance!**
+
+---
+
+## 🎨 Features
+
+- ✅ Modern, clean interface
+- ✅ Mobile responsive
+- ✅ Contact management
+- ✅ File attachments
+- ✅ Multiple identities
+- ✅ Folder management
+- ✅ Search functionality
+- ✅ Keyboard shortcuts
+- ✅ Multiple languages
+- ✅ Themes support
+- ✅ Plugin system
 
 ---
 
@@ -125,8 +174,13 @@ docker-compose restart
 # View logs
 docker-compose logs -f
 
+# Rebuild
+docker-compose build --no-cache
+docker-compose up -d
+
 # Update
-docker-compose pull
+git pull
+docker-compose build
 docker-compose up -d
 ```
 
@@ -143,21 +197,6 @@ docker-compose up -d
 
 ---
 
-## 🎨 Features
-
-- ✅ Clean, professional interface
-- ✅ Mobile responsive
-- ✅ Contact management
-- ✅ File attachments (50MB)
-- ✅ Multiple identities
-- ✅ Folder management
-- ✅ Search functionality
-- ✅ Keyboard shortcuts
-- ✅ Multiple languages
-- ✅ Plugins support
-
----
-
 ## 🔒 Security
 
 - ✅ SSL/TLS encryption
@@ -165,6 +204,7 @@ docker-compose up -d
 - ✅ Session management
 - ✅ XSS protection
 - ✅ CSRF protection
+- ✅ Admin panel protection
 
 ---
 
@@ -195,10 +235,14 @@ Works perfectly on:
 
 ### Need to reconfigure?
 
-**Edit environment variables:**
+**Access admin panel:**
+```
+https://mailadmin.syscomatic.com/?admin
+```
+
+Or edit domain config:
 ```bash
-nano docker-compose.yml
-# Change ROUNDCUBEMAIL_DEFAULT_HOST or SMTP settings
+nano ./rainloop-data/_data_/_default_/domains/syscomatic.com.ini
 docker-compose restart
 ```
 
@@ -206,32 +250,61 @@ docker-compose restart
 
 ## 📖 Documentation
 
-- **Official Docs:** https://roundcube.net/
-- **GitHub:** https://github.com/roundcube/roundcubemail
-- **Docker Image:** https://hub.docker.com/r/roundcube/roundcubemail
+- **Official Site:** https://www.rainloop.net/
+- **GitHub:** https://github.com/RainLoop/rainloop-webmail
+- **Documentation:** https://www.rainloop.net/docs/
 
 ---
 
 ## ⏱️ Deployment Timeline
 
 1. Upload files: ~1 minute
-2. Run deploy.sh: ~3 minutes
-3. Configure aaPanel: ~2 minutes
-4. **Total: ~6 minutes**
+2. Build Docker image: ~3 minutes
+3. Start container: ~1 minute
+4. Configure aaPanel: ~2 minutes
+5. **Total: ~7 minutes**
 
 ---
 
-## ✅ What's Different
+## 🏗️ Custom Build
+
+This setup uses a **custom Dockerfile** which means:
+- ✅ You can customize it
+- ✅ Add your own plugins
+- ✅ Modify PHP settings
+- ✅ Add custom themes
+- ✅ Full control
+
+Edit `Dockerfile` to customize!
+
+---
+
+## 📁 Project Structure
+
+```
+mailsystem/
+├── Dockerfile              # Custom RainLoop build
+├── docker-compose.yml      # Docker configuration
+├── deploy.sh              # Deployment script
+├── rainloop-config.php    # RainLoop settings
+├── rainloop-data/         # Data directory (created on first run)
+└── README.md              # This file
+```
+
+---
+
+## ✅ What's Different from Snappymail
 
 **Snappymail Issues:**
 - ❌ Admin panel configuration required
-- ❌ Password reset issues
+- ❌ localhost:143 error
 - ❌ Complex setup
 
-**Roundcube Solution:**
-- ✅ No admin panel needed
+**RainLoop Solution:**
+- ✅ Pre-configured domain
 - ✅ Works immediately
-- ✅ Simple setup
+- ✅ Simple admin panel
+- ✅ Custom Dockerfile
 
 ---
 
@@ -255,8 +328,8 @@ ssh root@156.67.216.209 "cd /opt/mailsystem && sudo ./deploy.sh"
 
 - Check logs: `docker-compose logs -f`
 - Test mail server: `./check-mail-server.sh`
-- Roundcube community: https://roundcube.net/support
+- Admin panel: `https://mailadmin.syscomatic.com/?admin`
 
 ---
 
-**Roundcube is the reliable choice. Deploy now!** 🚀
+**RainLoop - Simple, fast, and works!** 🚀

@@ -1,24 +1,27 @@
 version: '3.8'
 
 services:
-  roundcube:
-    image: roundcube/roundcubemail:latest
-    container_name: roundcube_webmail
+  rainloop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rainloop-custom:latest
+    container_name: rainloop_webmail
     restart: unless-stopped
     ports:
       - "127.0.0.1:9000:80"
-    environment:
-      - ROUNDCUBEMAIL_DEFAULT_HOST=ssl://156.67.216.209
-      - ROUNDCUBEMAIL_DEFAULT_PORT=993
-      - ROUNDCUBEMAIL_SMTP_SERVER=tls://156.67.216.209
-      - ROUNDCUBEMAIL_SMTP_PORT=587
-      - ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE=50M
-      - ROUNDCUBEMAIL_SKIN=elastic
     volumes:
-      - ./roundcube-data:/var/www/html
-      - ./roundcube-db:/var/roundcube/db
+      - ./rainloop-data:/var/www/html/data
+    environment:
+      - TZ=Asia/Dhaka
     networks:
       - mailnet
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   mailnet:
