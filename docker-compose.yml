@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  snappymail:
+    image: djmaze/snappymail:latest
+    container_name: snappymail_webmail
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/var/lib/snappymail
+    environment:
+      - TZ=Asia/Dhaka
+    networks:
+      - mailnet
+
+networks:
+  mailnet:
+    driver: bridge
