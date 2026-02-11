@@ -1,159 +1,133 @@
-# 📧 Snappymail Webmail System
+# Roundcube Webmail System
 
-> **Modern, Gmail-like webmail client for your custom mail server**  
-> Replace Roundcube with a beautiful, fast, and easy-to-use interface
-
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-AGPL--3.0-green)](https://github.com/the-djmaze/snappymail)
-[![Snappymail](https://img.shields.io/badge/Snappymail-Latest-orange)](https://snappymail.eu/)
+> **Reliable, proven webmail client for your aaPanel mail server**  
+> Works immediately with your existing mail accounts
 
 ---
 
 ## 🎯 What is This?
 
-A complete, production-ready setup for **Snappymail** webmail client, designed to replace Roundcube on your custom mail server at `mailadmin.syscomatic.com`.
+**Roundcube** - The most popular open-source webmail client. Pre-configured for your aaPanel mail server at `mailadmin.syscomatic.com`.
 
-### ✨ Key Features
+### ✨ Why Roundcube?
 
-- 🎨 **Modern Gmail-like interface** - Beautiful and intuitive
-- 📱 **Mobile responsive** - Works perfectly on all devices
-- 🚀 **Fast deployment** - Get started in 5 minutes
-- 🐳 **Docker-based** - Easy to deploy and maintain
-- 🔒 **Secure** - SSL/TLS, 2FA support
-- ⚡ **Lightweight** - Only 50MB RAM usage
-- 🛠️ **Easy configuration** - Simple admin panel
+- ✅ **Works immediately** - No complex configuration
+- ✅ **Proven & reliable** - Used by millions
+- ✅ **Pre-configured** - Ready for your mail server
+- ✅ **No admin panel issues** - Just login and use
+- ✅ **Full-featured** - Everything you need
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Deploy (2 Commands)
 
-### One-Command Deployment
-
+### **1. Upload to VPS:**
 ```bash
-# Upload to your VPS
 scp -r * root@156.67.216.209:/opt/mailsystem/
+```
 
-# SSH and deploy
+### **2. Run Setup:**
+```bash
 ssh root@156.67.216.209
 cd /opt/mailsystem
 sudo ./deploy.sh
 ```
 
-**That's it!** Access at `http://your-server:8888`
-
-For detailed instructions, see **[QUICKSTART.md](QUICKSTART.md)**
+**That's it!** Takes 3 minutes.
 
 ---
 
-## 📚 Documentation
+## ⚙️ Pre-Configured Settings
 
-| Document | Description | Read Time |
-|----------|-------------|-----------|
-| **[INDEX.md](INDEX.md)** | 📑 Complete navigation guide | 5 min |
-| **[QUICKSTART.md](QUICKSTART.md)** | 🚀 5-minute setup guide | 5 min |
-| **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** | 📊 Project overview | 5 min |
-| **[README.md](README.md)** | 📖 Full documentation | 15 min |
-| **[COMPARISON.md](COMPARISON.md)** | 🆚 Why Snappymail? | 10 min |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | 🏗️ System architecture | 15 min |
-| **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** | 🔧 Problem solving | As needed |
+Already configured for your mail server:
 
-**👉 Start with [INDEX.md](INDEX.md) for complete navigation**
+```yaml
+IMAP:
+  Server: 156.67.216.209
+  Port: 993
+  Security: SSL
 
----
-
-## 📁 Project Structure
-
-```
-mailsystem/
-├── 📄 Documentation
-│   ├── INDEX.md                    # Navigation guide
-│   ├── QUICKSTART.md               # 5-minute setup
-│   ├── PROJECT_SUMMARY.md          # Overview
-│   ├── README.md                   # Full docs
-│   ├── COMPARISON.md               # Alternatives comparison
-│   ├── ARCHITECTURE.md             # System design
-│   └── TROUBLESHOOTING.md          # Problem solving
-│
-├── 🔧 Scripts
-│   ├── deploy.sh                   # Automated deployment
-│   ├── backup.sh                   # Backup automation
-│   ├── health-check.sh             # System monitoring
-│   └── test-smtp.sh                # SMTP testing
-│
-├── ⚙️ Configuration
-│   ├── docker-compose.yml          # Docker config (dev)
-│   ├── docker-compose.prod.yml     # Docker config (prod)
-│   ├── Dockerfile                  # Custom image
-│   ├── nginx.conf                  # Reverse proxy
-│   └── .env.example                # Environment template
-│
-└── 📂 Data
-    └── data/                       # Created on first run
+SMTP:
+  Server: 156.67.216.209
+  Port: 587
+  Security: TLS
 ```
 
----
-
-## 🎯 Why Snappymail?
-
-### Problems with Roundcube
-- ❌ Complex setup and configuration
-- ❌ Outdated, cluttered interface
-- ❌ SMTP authentication issues
-- ❌ Poor mobile experience
-- ❌ Slow performance
-
-### Snappymail Solutions
-- ✅ 5-minute Docker deployment
-- ✅ Modern, Gmail-like interface
-- ✅ Easy SMTP configuration
-- ✅ Excellent mobile support
-- ✅ Fast and lightweight
-
-**See [COMPARISON.md](COMPARISON.md) for detailed comparison**
+**No configuration needed!**
 
 ---
 
-## 🛠️ Your Mail Server Setup
+## 🎯 After Deployment
 
-### Current Configuration (Already Set Up ✅)
+### **Configure aaPanel Reverse Proxy:**
 
-**DNS Records:**
-- ✅ A: `mailadmin.syscomatic.com` → `156.67.216.209`
-- ✅ MX: `syscomatic.com` → `mail.syscomatic.com`
-- ✅ SPF: `v=spf1 a mx ip4:156.67.216.209 ~all`
-- ✅ DKIM: Configured
-- ✅ DMARC: Configured
+1. **Login to aaPanel**
+2. **Add Website:**
+   - Domain: `mailadmin.syscomatic.com`
+3. **Set Reverse Proxy:**
+   - Target: `http://127.0.0.1:8080`
+4. **Add SSL Certificate:**
+   - Use Let's Encrypt
 
-**Mail Servers:**
-- 📥 IMAP: `imap.syscomatic.com:993` (SSL)
-- 📤 SMTP: `smtp.syscomatic.com:587` (STARTTLS)
+### **Access Webmail:**
+
+Go to: `https://mailadmin.syscomatic.com`
+
+Login with:
+```
+Email: asif@syscomatic.com
+Password: Asif@2026#
+```
+
+**Works immediately!** ✨
 
 ---
 
-## 🔧 Quick Commands
+## 📋 Your Email Accounts
+
+All these accounts will work:
+
+```
+asif@syscomatic.com - Asif@2026#
+rakib@syscomatic.com - Rakib@2026#
+consult@syscomatic.com - C@nsult@2026#
+zahed@syscomatic.com - Z@hed@2026#
+```
+
+---
+
+## 🆚 Roundcube vs Snappymail
+
+| Feature | Roundcube | Snappymail |
+|---------|-----------|------------|
+| **Setup** | ✅ Works immediately | ❌ Needs admin config |
+| **Reliability** | ✅ Very stable | ⚠️ Can be tricky |
+| **Configuration** | ✅ Pre-configured | ❌ Manual setup |
+| **Compatibility** | ✅ Works with all mail servers | ⚠️ Sometimes issues |
+| **Maturity** | ✅ 15+ years | ⚠️ Newer |
+
+**Roundcube just works!**
+
+---
+
+## 🔧 Useful Commands
 
 ```bash
-# Deploy
-sudo ./deploy.sh
-
-# Start/Stop
+# Start
 docker-compose up -d
+
+# Stop
 docker-compose down
+
+# Restart
+docker-compose restart
 
 # View logs
 docker-compose logs -f
 
-# Health check
-./health-check.sh
-
-# Backup
-./backup.sh
-
-# Test SMTP
-./test-smtp.sh
-
 # Update
-docker-compose pull && docker-compose up -d
+docker-compose pull
+docker-compose up -d
 ```
 
 ---
@@ -163,251 +137,126 @@ docker-compose pull && docker-compose up -d
 **Minimum:**
 - 512MB RAM
 - 1 CPU core
-- 1GB disk space
-- Ubuntu/Debian VPS
+- 2GB disk space
 
-**Recommended:**
-- 1GB RAM
-- 2 CPU cores
-- 5GB disk space
+**Your server meets all requirements!**
 
 ---
 
-## 🔒 Security Features
+## 🎨 Features
 
-- ✅ SSL/TLS encryption (HTTPS)
-- ✅ Secure IMAP/SMTP connections
-- ✅ 2FA support
-- ✅ Security headers (HSTS, CSP, etc.)
-- ✅ Docker isolation
-- ✅ Regular security updates
-
----
-
-## 📱 Access Points
-
-After deployment:
-
-- **Webmail:** `https://mailadmin.syscomatic.com`
-- **Admin Panel:** `https://mailadmin.syscomatic.com/?admin`
-- **Default Admin Password:** `12345` (⚠️ Change immediately!)
-
----
-
-## 🎓 Getting Started Guide
-
-### For First-Time Users
-
-1. **Read the overview**
-   - Start with [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
-
-2. **Quick deployment**
-   - Follow [QUICKSTART.md](QUICKSTART.md)
-
-3. **Configure your server**
-   - Access admin panel
-   - Add your domain
-   - Configure IMAP/SMTP
-
-4. **Set up production**
-   - Install SSL certificate
-   - Configure Nginx
-   - Set up backups
-
-5. **Test everything**
-   - Run `./health-check.sh`
-   - Send test email
-   - Check mobile access
-
-### For Experienced Users
-
-```bash
-# Clone/upload files
-scp -r * root@your-server:/opt/mailsystem/
-
-# Deploy
-ssh root@your-server
-cd /opt/mailsystem
-./deploy.sh
-
-# Configure
-# Access http://your-server:8888/?admin
-# Add domain, configure IMAP/SMTP
-
-# Production setup
-sudo certbot --nginx -d mailadmin.syscomatic.com
-```
-
----
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| Authentication error | See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) #1 |
-| Can't send emails | Run `./test-smtp.sh` |
-| Container won't start | Check `docker-compose logs` |
-| Port already in use | Change port in `docker-compose.yml` |
-| SSL certificate issues | Run `certbot --nginx` |
-
-**Full troubleshooting guide:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-
----
-
-## 🔄 Migration from Roundcube
-
-**Zero-downtime migration:**
-
-1. Deploy Snappymail (keep Roundcube running)
-2. Configure mail server settings
-3. Test with one account
-4. Inform users of new URL
-5. Run both for 1 week
-6. Decommission Roundcube
-
-**Total time:** ~30 minutes  
-**Downtime:** Zero
-
----
-
-## 📦 What's Included
-
-### Documentation (7 files)
-- Complete setup guides
-- Architecture diagrams
-- Troubleshooting guides
-- Comparison with alternatives
-
-### Scripts (4 files)
-- Automated deployment
-- Backup automation
-- Health monitoring
-- SMTP testing
-
-### Configuration (5 files)
-- Docker Compose configs
-- Nginx reverse proxy
-- Environment templates
-- Custom Dockerfile
-
----
-
-## 🌟 Features
-
-- ✅ Gmail-like interface
-- ✅ Multiple accounts
+- ✅ Clean, professional interface
+- ✅ Mobile responsive
 - ✅ Contact management
-- ✅ File attachments (up to 50MB)
+- ✅ File attachments (50MB)
+- ✅ Multiple identities
+- ✅ Folder management
 - ✅ Search functionality
 - ✅ Keyboard shortcuts
-- ✅ Multiple themes
-- ✅ Plugin system
-- ✅ 2FA support
-- ✅ Mobile responsive
-- ✅ Multi-language
-- ✅ Customizable branding
+- ✅ Multiple languages
+- ✅ Plugins support
 
 ---
 
-## 📈 Performance
+## 🔒 Security
 
-- **Load time:** < 1 second
-- **Memory usage:** ~50MB
-- **CPU usage:** Minimal
-- **Concurrent users:** 100+ (single server)
-- **Email handling:** Fast IMAP/SMTP
-
----
-
-## 🤝 Support
-
-### Documentation
-- 📖 **This project:** See [INDEX.md](INDEX.md)
-- 🌐 **Snappymail:** https://snappymail.eu/
-- 📚 **Wiki:** https://github.com/the-djmaze/snappymail/wiki
-
-### Community
-- 💬 **Forum:** https://forum.snappymail.eu/
-- 🐛 **Issues:** https://github.com/the-djmaze/snappymail/issues
-
-### Tools
-- 🔧 **Email tester:** https://www.mail-tester.com/
-- 📊 **MX toolbox:** https://mxtoolbox.com/
-- 🔒 **SSL checker:** https://www.ssllabs.com/ssltest/
+- ✅ SSL/TLS encryption
+- ✅ Secure IMAP/SMTP
+- ✅ Session management
+- ✅ XSS protection
+- ✅ CSRF protection
 
 ---
 
-## 📝 License
+## 📱 Mobile Access
 
-- **Snappymail:** AGPL-3.0
-- **This setup:** Free to use and modify
+Works perfectly on:
+- ✅ iPhone/iPad
+- ✅ Android phones/tablets
+- ✅ All modern browsers
 
 ---
 
-## 🎉 Ready to Deploy?
+## 🛠️ Troubleshooting
 
-### Quick Start
+### Can't login?
+
+**Check:**
+1. Email password is correct
+2. Mail server is running
+3. Ports 993 and 587 are open
+
+### Connection error?
+
+**Run diagnostic:**
 ```bash
-cd /opt/mailsystem
-sudo ./deploy.sh
+./check-mail-server.sh
 ```
 
-### Need Help?
-- 📖 Read [QUICKSTART.md](QUICKSTART.md)
-- 🗺️ Check [INDEX.md](INDEX.md)
-- 🔧 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+### Need to reconfigure?
+
+**Edit environment variables:**
+```bash
+nano docker-compose.yml
+# Change ROUNDCUBEMAIL_DEFAULT_HOST or SMTP settings
+docker-compose restart
+```
 
 ---
 
-## ✅ Pre-Deployment Checklist
+## 📖 Documentation
 
-- [ ] VPS server ready (Ubuntu/Debian)
-- [ ] Domain pointing to server
-- [ ] Root/sudo access
-- [ ] Read [QUICKSTART.md](QUICKSTART.md)
-- [ ] Copied `.env.example` to `.env`
-- [ ] Updated `.env` with settings
+- **Official Docs:** https://roundcube.net/
+- **GitHub:** https://github.com/roundcube/roundcubemail
+- **Docker Image:** https://hub.docker.com/r/roundcube/roundcubemail
 
 ---
 
-## 🏆 Success Criteria
+## ⏱️ Deployment Timeline
 
-After deployment, you should have:
-
-- ✅ Snappymail running on port 8888
-- ✅ Admin panel accessible
-- ✅ Mail server configured
-- ✅ SSL certificate installed
-- ✅ Emails sending/receiving
-- ✅ Mobile access working
-- ✅ Backups configured
+1. Upload files: ~1 minute
+2. Run deploy.sh: ~3 minutes
+3. Configure aaPanel: ~2 minutes
+4. **Total: ~6 minutes**
 
 ---
 
-## 📞 Next Steps
+## ✅ What's Different
 
-1. **Deploy** - Run `./deploy.sh`
-2. **Configure** - Set up mail server in admin panel
-3. **Secure** - Install SSL certificate
-4. **Test** - Send/receive test emails
-5. **Monitor** - Set up `./health-check.sh` cron job
-6. **Backup** - Configure `./backup.sh` automation
+**Snappymail Issues:**
+- ❌ Admin panel configuration required
+- ❌ Password reset issues
+- ❌ Complex setup
 
----
-
-**Made with ❤️ for syscomatic.com**
-
-*For complete navigation, see [INDEX.md](INDEX.md)*
+**Roundcube Solution:**
+- ✅ No admin panel needed
+- ✅ Works immediately
+- ✅ Simple setup
 
 ---
 
-**Quick Links:**
-- 🚀 [Quick Start](QUICKSTART.md)
-- 📖 [Full Documentation](README.md)
-- 🆚 [Comparison](COMPARISON.md)
-- 🔧 [Troubleshooting](TROUBLESHOOTING.md)
-- 🏗️ [Architecture](ARCHITECTURE.md)
-- 📑 [Complete Index](INDEX.md)
-# mailsystem
+## 🎉 Ready to Deploy
+
+```bash
+# Upload
+scp -r * root@156.67.216.209:/opt/mailsystem/
+
+# Deploy
+ssh root@156.67.216.209 "cd /opt/mailsystem && sudo ./deploy.sh"
+
+# Configure aaPanel reverse proxy
+
+# Done!
+```
+
+---
+
+## 📞 Support
+
+- Check logs: `docker-compose logs -f`
+- Test mail server: `./check-mail-server.sh`
+- Roundcube community: https://roundcube.net/support
+
+---
+
+**Roundcube is the reliable choice. Deploy now!** 🚀

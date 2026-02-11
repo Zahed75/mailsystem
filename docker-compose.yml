@@ -1,34 +1,24 @@
 version: '3.8'
 
 services:
-  snappymail:
-    image: djmaze/snappymail:latest
-    container_name: snappymail_webmail
+  roundcube:
+    image: roundcube/roundcubemail:latest
+    container_name: roundcube_webmail
     restart: unless-stopped
-    pull_policy: missing # Only pull if image doesn't exist locally
     ports:
-      - "127.0.0.1:8888:8888" # Bind to localhost only (for aaPanel proxy)
-    volumes:
-      - ./data:/var/lib/snappymail
+      - "127.0.0.1:8080:80"
     environment:
-      - TZ=Asia/Dhaka
+      - ROUNDCUBEMAIL_DEFAULT_HOST=ssl://156.67.216.209
+      - ROUNDCUBEMAIL_DEFAULT_PORT=993
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://156.67.216.209
+      - ROUNDCUBEMAIL_SMTP_PORT=587
+      - ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE=50M
+      - ROUNDCUBEMAIL_SKIN=elastic
+    volumes:
+      - ./roundcube-data:/var/www/html
+      - ./roundcube-db:/var/roundcube/db
     networks:
       - mailnet
-    healthcheck:
-      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8888" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    # Resource limits (optional - uncomment if needed)
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '1.0'
-    #       memory: 512M
-    #     reservations:
-    #       cpus: '0.5'
-    #       memory: 256M
 
 networks:
   mailnet:
