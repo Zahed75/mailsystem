@@ -5,14 +5,30 @@ services:
     image: djmaze/snappymail:latest
     container_name: snappymail_webmail
     restart: unless-stopped
+    pull_policy: missing # Only pull if image doesn't exist locally
     ports:
-      - "8888:8888"
+      - "127.0.0.1:8888:8888" # Bind to localhost only (for aaPanel proxy)
     volumes:
       - ./data:/var/lib/snappymail
     environment:
       - TZ=Asia/Dhaka
     networks:
       - mailnet
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8888" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Resource limits (optional - uncomment if needed)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 512M
+    #     reservations:
+    #       cpus: '0.5'
+    #       memory: 256M
 
 networks:
   mailnet:
