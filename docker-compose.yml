@@ -6,7 +6,7 @@ services:
     container_name: roundcube_webmail
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8888:80"
     environment:
       - ROUNDCUBEMAIL_DEFAULT_HOST=ssl://156.67.216.209
       - ROUNDCUBEMAIL_DEFAULT_PORT=993
