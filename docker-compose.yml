@@ -1,27 +1,21 @@
 version: '3.8'
 
 services:
-  rainloop:
+  webmail:
     build:
       context: .
       dockerfile: Dockerfile
-    image: rainloop-custom:latest
-    container_name: rainloop_webmail
+    image: afterlogic-webmail:latest
+    container_name: afterlogic_webmail
     restart: unless-stopped
     ports:
-      - "127.0.0.1:9000:80"
+      - "9000:80"
     volumes:
-      - ./rainloop-data:/var/www/html/data
+      - ./data:/var/www/html/data
     environment:
       - TZ=Asia/Dhaka
     networks:
       - mailnet
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost/" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
 networks:
   mailnet:

@@ -1,52 +1,47 @@
 FROM php:8.1-apache
 
-# Install required PHP extensions
+# Install required packages and PHP extensions
 RUN apt-get update && apt-get install -y \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
     libzip-dev \
-    unzip \
-    wget \
-    && docker-php-ext-install \
+    libicu-dev \
+    libonig-dev \
+    libxml2-dev \
     curl \
+    unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+    gd \
+    mysqli \
     pdo \
     pdo_mysql \
-    xml \
     zip \
+    intl \
+    mbstring \
+    xml \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache modules
 RUN a2enmod rewrite headers
 
-# Set working directory
+# Download and install Afterlogic WebMail Lite
 WORKDIR /var/www/html
+RUN curl -L https://afterlogic.org/download/webmail_php.zip -o webmail.zip \
+    && unzip webmail.zip \
+    && rm webmail.zip \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Download and install RainLoop
-RUN wget -qO- https://www.rainloop.net/repository/webmail/rainloop-latest.zip > rainloop.zip \
-    && unzip rainloop.zip \
-    && rm rainloop.zip \
-    && find . -type d -exec chmod 755 {} \; \
-    && find . -type f -exec chmod 644 {} \; \
-    && chown -R www-data:www-data /var/www/html
-
-# Create data directory
+# Create data directory with proper permissions
 RUN mkdir -p /var/www/html/data \
-    && chown -R www-data:www-data /var/www/html/data
-
-# Copy custom configuration
-COPY rainloop-config.php /var/www/html/data/_data_/_default_/configs/application.ini
-
-# Set permissions
-RUN chmod -R 755 /var/www/html/data
+    && chown -R www-data:www-data /var/www/html/data \
+    && chmod -R 777 /var/www/html/data
 
 # Expose port
 EXPOSE 80
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
 
 # Start Apache
 CMD ["apache2-foreground"]
